@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Invited — A Birthday Celebration</title>
+
+<!-- Google Fonts: Playfair Display (display) + Poppins (body/utility) -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;0,800;1,500&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  /* ==========================================================
+     CUSTOMIZATION ZONE — CSS TOKENS
+     Change these variables to re-theme the entire invitation.
+     ========================================================== */
+  :root{
+    --deep-red: #8B0000;
+    --deep-red-2: #B22222;
+    --gold: #D4AF37;
+    --gold-soft: #E9CE87;
+    --cream: #FBF6EC;
+    --white: #FFFFFF;
+    --ink: #2a1414;
+    --glass-bg: rgba(255,255,255,0.10);
+    --glass-border: rgba(212,175,55,0.35);
+    --shadow-deep: 0 20px 60px rgba(0,0,0,0.35);
+    --radius-lg: 24px;
+    --radius-md: 16px;
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Poppins', sans-serif;
+  }
+
+  *{ margin:0; padding:0; box-sizing:border-box; }
+
+  html{ scroll-behavior: smooth; }
+
+  body{
+    font-family: var(--font-body);
+    background:
+      radial-gradient(circle at 20% 10%, rgba(212,175,55,0.10), transparent 45%),
+      radial-gradient(circle at 85% 30%, rgba(178,34,34,0.25), transparent 50%),
+      linear-gradient(160deg, #3a0a0a 0%, #5c0f0f 30%, #8B0000 55%, #5c0f0f 80%, #2a0505 100%);
+    background-attachment: fixed;
+    color: var(--cream);
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* Ambient floating gold particles */
+  .particles{
+    position: fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden;
+  }
+  .particle{
+    position:absolute; bottom:-10px; border-radius:50%;
+    background: radial-gradient(circle, var(--gold-soft), transparent 70%);
+    opacity:0.55; animation: float-up linear infinite;
+  }
+  @keyframes float-up{
+    0%{ transform: translateY(0) translateX(0) scale(1); opacity:0; }
+    10%{ opacity:0.6; }
+    90%{ opacity:0.4; }
+    100%{ transform: translateY(-110vh) translateX(20px) scale(0.6); opacity:0; }
+  }
+
+  .container{
+    position: relative; z-index:1;
+    max-width: 880px;
+    margin: 0 auto;
+    padding: 60px 24px 40px;
+  }
+
+  /* Decorative gold divider */
+  .divider{
+    display:flex; align-items:center; justify-content:center; gap:14px;
+    margin: 28px 0;
+    opacity: 0;
+    animation: fade-in 1s ease forwards;
+  }
+  .divider::before, .divider::after{
+    content:''; height:1px; width:70px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+  .divider span{ color:var(--gold); font-size: 1.1rem; }
+
+  @keyframes fade-in{ to{ opacity:1; } }
+  @keyframes fade-up{
+    from{ opacity:0; transform: translateY(24px); }
+    to{ opacity:1; transform: translateY(0); }
+  }
+
+  .reveal{ opacity:0; animation: fade-up 0.9s ease forwards; }
+  .delay-1{ animation-delay: .15s; }
+  .delay-2{ animation-delay: .3s; }
+  .delay-3{ animation-delay: .45s; }
+  .delay-4{ animation-delay: .6s; }
+
+  /* ============ HEADER / HERO ============ */
+  .hero{
+    text-align:center;
+    padding: 20px 0 10px;
+  }
+
+  .eyebrow{
+    font-family: var(--font-body);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    font-size: 0.78rem;
+    color: var(--gold-soft);
+    font-weight: 500;
+  }
+
+  .youre-invited{
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-style: italic;
+    font-size: clamp(2.6rem, 7vw, 4.6rem);
+    color: var(--white);
+    text-shadow: 0 4px 30px rgba(0,0,0,0.4);
+    margin: 8px 0 6px;
+    letter-spacing: 1px;
+  }
+
+  .subtext{
+    font-size: 1.02rem;
+    color: var(--cream);
+    opacity: 0.9;
+    font-weight: 300;
+    letter-spacing: 0.5px;
+  }
+
+  .celebrant-name{
+    font-family: var(--font-display);
+    font-size: clamp(2.2rem, 6vw, 3.6rem);
+    font-weight: 800;
+    background: linear-gradient(120deg, var(--gold-soft), var(--gold) 40%, var(--gold-soft) 70%, var(--gold));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    margin: 18px 0 6px;
+    letter-spacing: 1px;
+  }
+
+  .celebrating-age{
+    font-family: var(--font-body);
+    font-size: 1.15rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--cream);
+    font-weight: 500;
+  }
+
+  /* ============ GLASS CARD BASE ============ */
+  .glass-card{
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-deep);
+    padding: 34px 30px;
+    position: relative;
+  }
+
+  .glass-card::before{
+    content:'';
+    position:absolute; inset:0;
+    border-radius: inherit;
+    padding:1px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.5), transparent 40%, rgba(212,175,55,0.4));
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events:none;
+  }
+
+  /* ============ GUEST GREETING ============ */
+  .guest-card{
+    margin-top: 40px;
+    text-align:center;
+  }
+
+  .guest-dear{
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    color: var(--gold-soft);
+    margin-bottom: 14px;
+  }
+
+  .guest-message{
+    font-size: 0.98rem;
+    line-height: 1.8;
+    color: var(--cream);
+    opacity: 0.92;
+    max-width: 560px;
+    margin: 0 auto;
+    font-weight: 300;
+  }
+
+  /* Guest switcher (dev convenience UI) */
+  .guest-switcher{
+    margin-top: 22px;
+    display:flex; flex-wrap:wrap; justify-content:center; gap:8px;
+  }
+  .guest-switcher select{
+    background: rgba(0,0,0,0.25);
+    color: var(--cream);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 9px 18px;
+    font-family: var(--font-body);
+    font-size: 0.82rem;
+    cursor:pointer;
+    outline:none;
+  }
+  .guest-switcher select option{ background: #4a0d0d; color:var(--cream); }
+
+  /* ============ SECTION HEADINGS ============ */
+  .section{
+    margin-top: 64px;
+  }
+  .section-title{
+    font-family: var(--font-display);
+    font-style: italic;
+    text-align:center;
+    font-size: clamp(1.6rem, 4vw, 2.2rem);
+    color: var(--white);
+    margin-bottom: 30px;
+  }
+
+  /* ============ EVENT DETAIL CARDS ============ */
+  .details-grid{
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+  @media (max-width: 600px){
+    .details-grid{ grid-template-columns: 1fr; }
+  }
+
+  .detail-card{
+    text-align:center;
+    padding: 28px 20px;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease;
+  }
+  .detail-card:hover{
+    transform: translateY(-6px);
+    border-color: var(--gold);
+    box-shadow: 0 24px 70px rgba(212,175,55,0.18), var(--shadow-deep);
+  }
+  .detail-icon{
+    font-size: 2rem;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 4px 10px rgba(0,0,0,0.3));
+  }
+  .detail-label{
+    font-size: 0.72rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold-soft);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .detail-value{
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--white);
+    font-weight: 500;
+  }
+
+  /* ============ DRESS CODE ============ */
+  .dresscode-card{
+    text-align:center;
+    padding: 34px 26px;
+  }
+  .dresscode-title{
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-style: italic;
+    color: var(--gold-soft);
+    margin-bottom: 10px;
+  }
+  .dresscode-note{
+    font-size: 0.95rem;
+    opacity: 0.9;
+    line-height: 1.7;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+  .no-red-badge{
+    display:inline-flex; align-items:center; gap:8px;
+    margin-top: 16px;
+    padding: 8px 20px;
+    border: 1px solid var(--deep-red-2);
+    background: rgba(139,0,0,0.25);
+    border-radius: 30px;
+    font-size: 0.8rem;
+    letter-spacing: 1px;
+    color: var(--gold-soft);
+  }
+
+  /* ============ PHOTOGRAPHY NOTICE ============ */
+  .photo-card{
+    text-align:center;
+    padding: 30px 26px;
+  }
+  .photo-card p{
+    font-size: 0.92rem;
+    line-height: 1.75;
+    opacity: 0.88;
+    max-width: 540px;
+    margin: 10px auto 0;
+  }
+
+  /* ============ RSVP ============ */
+  .rsvp-card{
+    text-align:center;
+    padding: 40px 28px;
+  }
+  .rsvp-line{
+    font-size: 0.98rem;
+    margin: 6px 0;
+    color: var(--cream);
+    opacity: 0.92;
+  }
+  .rsvp-line strong{ color: var(--gold-soft); font-weight: 600; }
+
+  .rsvp-btn{
+    display:inline-flex; align-items:center; gap:10px;
+    margin-top: 26px;
+    padding: 15px 40px;
+    background: linear-gradient(120deg, var(--gold), var(--gold-soft));
+    color: #3a1a05;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 40px;
+    text-decoration:none;
+    cursor:pointer;
+    box-shadow: 0 12px 30px rgba(212,175,55,0.35);
+    transition: transform 0.35s ease, box-shadow 0.35s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .rsvp-btn::before{
+    content:'';
+    position:absolute; top:0; left:-120%;
+    width: 60%; height: 100%;
+    background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.7s ease;
+  }
+  .rsvp-btn:hover{
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 18px 45px rgba(212,175,55,0.5);
+  }
+  .rsvp-btn:hover::before{ left: 130%; }
+
+  /* ============ COUNTDOWN ============ */
+  .countdown-card{
+    text-align:center;
+    padding: 38px 20px;
+  }
+  .countdown-grid{
+    display:flex; justify-content:center; gap: 16px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .countdown-unit{
+    min-width: 84px;
+    background: rgba(0,0,0,0.2);
+    border: 1px solid var(--glass-border);
+    border-radius: var(--radius-md);
+    padding: 16px 10px;
+  }
+  .countdown-number{
+    font-family: var(--font-display);
+    font-size: 2.1rem;
+    font-weight: 700;
+    color: var(--gold-soft);
+    line-height:1;
+  }
+  .countdown-label{
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-top: 8px;
+    opacity: 0.75;
+  }
+
+  /* ============ GALLERY ============ */
+  /* Updated for portrait (940x1600 ≈ 9:16) images so they are
+     no longer force-cropped into a square. */
+  .gallery-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  @media (max-width: 640px){
+    .gallery-grid{ grid-template-columns: repeat(2, 1fr); }
+  }
+  .gallery-item{
+    aspect-ratio: 9 / 16; /* portrait ratio matching source photos, replaces old 1/1 square */
+    border-radius: var(--radius-md);
+    overflow:hidden;
+    position: relative;
+    border: 1px solid var(--glass-border);
+    background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(139,0,0,0.35));
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    transition: transform 0.5s ease, box-shadow 0.5s ease, border-color 0.5s ease;
+  }
+  .gallery-item img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .gallery-item span{
+    font-size: 1.8rem;
+    opacity: 0.6;
+    transition: transform 0.5s ease, opacity 0.5s ease;
+  }
+  .gallery-item::after{
+    content:'';
+    position:absolute; inset:0;
+    background: linear-gradient(180deg, transparent 50%, rgba(0,0,0,0.4));
+    opacity:0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .gallery-item:hover{
+    transform: translateY(-8px) scale(1.03);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    border-color: var(--gold);
+  }
+  .gallery-item:hover img{ transform: scale(1.08); }
+  .gallery-item:hover span{ transform: scale(1.15); opacity: 0.9; }
+  .gallery-item:hover::after{ opacity:1; }
+
+  /* ============ FOOTER ============ */
+  footer{
+    text-align:center;
+    margin-top: 70px;
+    padding: 30px 0 10px;
+  }
+  .footer-main{
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: clamp(1.3rem, 4vw, 1.7rem);
+    color: var(--white);
+  }
+  .footer-sub{
+    margin-top: 8px;
+    font-size: 0.95rem;
+    color: var(--gold-soft);
+    letter-spacing: 1px;
+  }
+  .footer-fineprint{
+    margin-top: 22px;
+    font-size: 0.7rem;
+    opacity: 0.45;
+    letter-spacing: 0.5px;
+  }
+
+  ::selection{ background: var(--gold); color: #3a1a05; }
+
+  @media (prefers-reduced-motion: reduce){
+    *, *::before, *::after{ animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Ambient floating gold particles (decorative, generated via JS below) -->
+<div class="particles" id="particles"></div>
+
+<div class="container">
+
+  <!-- ============ HERO / HEADER ============ -->
+  <section class="hero reveal">
+    <div class="eyebrow">Join us as we celebrate</div>
+    <h1 class="youre-invited">You're Invited</h1>
+    <div class="divider"><span>✦</span></div>
+    <div class="celebrant-name" id="celebrantName">Faith Wambui</div>
+    <div class="celebrating-age" id="celebratingAge">Celebrating 30 Years</div>
+  </section>
+
+  <!-- ============ PERSONALIZED GUEST GREETING ============ -->
+  <section class="glass-card guest-card reveal delay-1">
+    <div class="guest-dear">Dear <span id="guestName">Esteemed Guest</span>,</div>
+    <p class="guest-message">
+      It would be our greatest pleasure to have you celebrate this special occasion with us.
+    </p>
+
+    <!-- Guest switcher: convenience for previewing personalized invites -->
+    <div class="guest-switcher">
+      <select id="guestSelect" onchange="switchGuest(this.value)">
+        <option value="">— Preview a guest —</option>
+      </select>
+    </div>
+  </section>
+
+  <!-- ============ EVENT DETAILS ============ -->
+  <section class="section">
+    <h2 class="section-title">Event Details</h2>
+    <div class="details-grid">
+      <div class="glass-card detail-card reveal delay-1">
+        <div class="detail-icon">📅</div>
+        <div class="detail-label">Date</div>
+        <div class="detail-value" id="eventDate">Saturday, 9 August 2026</div>
+      </div>
+      <div class="glass-card detail-card reveal delay-2">
+        <div class="detail-icon">⏰</div>
+        <div class="detail-label">Time</div>
+        <div class="detail-value" id="eventTime">4:00 PM</div>
+      </div>
+      <div class="glass-card detail-card reveal delay-3">
+        <div class="detail-icon">📍</div>
+        <div class="detail-label">Venue</div>
+        <div class="detail-value" id="eventVenue">The Emerald Gardens, Nairobi</div>
+      </div>
+      <div class="glass-card detail-card reveal delay-4">
+        <div class="detail-icon">🎂</div>
+        <div class="detail-label">Occasion</div>
+        <div class="detail-value">Birthday Celebration</div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ============ DRESS CODE ============ -->
+  <section class="section">
+    <div class="glass-card dresscode-card reveal">
+      <div class="dresscode-title">Dress Code</div>
+      <p class="dresscode-note">Dress Elegantly.</p>
+      <div class="no-red-badge">⚠️ Kindly avoid wearing red — reserved for the birthday girl</div>
+    </div>
+  </section>
+
+  <!-- ============ PHOTOGRAPHY NOTICE ============ -->
+  <section class="section">
+    <div class="glass-card photo-card reveal">
+      <div class="detail-icon">📸</div>
+      <p>
+        A professional photographer and videographer will be present throughout the event.
+        By attending, you consent to appearing in photographs and videos captured during the celebration.
+      </p>
+    </div>
+  </section>
+
+  <!-- ============ COUNTDOWN ============ -->
+  <section class="section">
+    <div class="glass-card countdown-card reveal">
+      <h2 class="section-title" style="margin-bottom:0;">Counting Down To The Celebration</h2>
+      <div class="countdown-grid" id="countdown">
+        <div class="countdown-unit"><div class="countdown-number" id="cd-days">00</div><div class="countdown-label">Days</div></div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-hours">00</div><div class="countdown-label">Hours</div></div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-minutes">00</div><div class="countdown-label">Minutes</div></div>
+        <div class="countdown-unit"><div class="countdown-number" id="cd-seconds">00</div><div class="countdown-label">Seconds</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RSVP ============ -->
+  <section class="section">
+    <div class="glass-card rsvp-card reveal">
+      <h2 class="section-title" style="margin-bottom:14px;">RSVP</h2>
+      <p class="rsvp-line"><strong>RSVP before:</strong> <span id="rsvpDate">10th August 2026</span></p>
+      <p class="rsvp-line"><strong>Email:</strong> <span id="rsvpEmailText">rsvp@example.com</span></p>
+      <a href="#" id="rsvpBtn" class="rsvp-btn">✉️ RSVP via Email</a>
+    </div>
+  </section>
+
+  <!-- <Note> -->
+    <section class="section">
+    <div class="glass-card note-card ">
+      <!-- <div class="dresscode-title">Reservation</div> -->
+      <p class="dresscode-note">Reservation.</p>
+       <div class="no-red-badge">To confirm your reservation, a redemaable reservation fee of KES 2,000 is required.Kindly send to this number 0768 454704
+</div> 
+    </div>
+  </section>
+
+  <!-- ============ GALLERY ============ -->
+  <section class="section">
+  <h2 class="section-title">Gallery</h2>
+
+  <div class="gallery-grid">
+    <div class="gallery-item reveal">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.55 AM.jpeg" alt="Birthday Photo 1">
+    </div>
+
+    <div class="gallery-item reveal delay-1">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.57 AM (1).jpeg" alt="Birthday Photo 2">
+    </div>
+
+    <div class="gallery-item reveal delay-2">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.57 AM.jpeg" alt="Birthday Photo 3">
+    </div>
+
+    <div class="gallery-item reveal delay-3">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.58 AM (1).jpeg" alt="Birthday Photo 4">
+    </div>
+
+    <div class="gallery-item reveal delay-4">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.58 AM.jpeg" alt="Birthday Photo 5">
+    </div>
+
+    <div class="gallery-item reveal">
+      <img src="WhatsApp Image 2026-07-15 at 11.04.59 AM.jpeg" alt="Birthday Photo 6">
+    </div>
+  </div>
+</section>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="reveal">
+    <div class="divider"><span>✦</span></div>
+    <div class="footer-main">We can't wait to celebrate with you!</div>
+    <div class="footer-sub">With Love ❤️</div>
+    <div class="footer-fineprint">Made with elegance for a night to remember</div>
+  </footer>
+
+</div>
+
+<script>
+/* ==========================================================
+   CUSTOMIZATION ZONE — EVENT / CELEBRANT / RSVP CONFIG
+   Edit the values below to personalize this invitation.
+   ========================================================== */
+const EVENT_CONFIG = {
+  celebrantName: "Faith Wambui",
+  age: 30,
+  eventDate: "Saturday, 9th August 2026",
+  eventTime: "7:00 PM",
+  eventVenue: "Acacia,Ole Sereni",
+  rsvpDeadline: "4th August 2026",
+  rsvpEmail: "peryshidiamuchai@gmail.com",
+  // ISO date used to power the live countdown timer (YYYY-MM-DDTHH:mm:ss)
+  countdownTarget: "2026-08-22T16:00:00"
+};
+
+/* ==========================================================
+   GUEST LIST
+   Add or remove guest names here. Each guest can view their
+   own personalized invitation via a URL parameter, e.g.:
+   yoursite.com/invite.html?guest=John%20Doe
+   ========================================================== */
+const guests = [
+  "Peryshidia Nungari",
+  "Zaifa",
+  "Benedetta Wamuyu",
+  "Veronicah",
+  "Mirievon Nyambura",
+  "Monica",
+  "Molly",
+  "Mary",
+  "Patricia",
+  "Cheboi",
+  "Swaleh",
+  "Ken",
+  "Stevo",
+  "FaithJoan"
+];
+
+/* ---------------------------------------------------------
+   Populate static event/celebrant details from config
+   --------------------------------------------------------- */
+document.getElementById('celebrantName').textContent = EVENT_CONFIG.celebrantName;
+document.getElementById('celebratingAge').textContent = `Celebrating ${EVENT_CONFIG.age} Years`;
+document.getElementById('eventDate').textContent = EVENT_CONFIG.eventDate;
+document.getElementById('eventTime').textContent = EVENT_CONFIG.eventTime;
+document.getElementById('eventVenue').textContent = EVENT_CONFIG.eventVenue;
+document.getElementById('rsvpDate').textContent = EVENT_CONFIG.rsvpDeadline;
+document.getElementById('rsvpEmailText').textContent = EVENT_CONFIG.rsvpEmail;
+document.getElementById('rsvpBtn').href =
+  `mailto:${EVENT_CONFIG.rsvpEmail}?subject=RSVP%20-%20${encodeURIComponent(EVENT_CONFIG.celebrantName)}'s%20Birthday%20Celebration`;
+document.title = `You're Invited — ${EVENT_CONFIG.celebrantName}'s Birthday`;
+
+/* ---------------------------------------------------------
+   GUEST PERSONALIZATION
+   Reads ?guest=Name from the URL. Falls back to a generic
+   greeting if no match is found, and populates the guest
+   switcher dropdown for easy manual previewing.
+   --------------------------------------------------------- */
+function setGuestName(name){
+  const el = document.getElementById('guestName');
+  el.textContent = name && name.trim() ? name.trim() : "Esteemed Guest";
+}
+
+function switchGuest(name){
+  if (!name) return;
+  setGuestName(name);
+  // Reflect the choice in the URL bar without reloading the page
+  const url = new URL(window.location);
+  url.searchParams.set('guest', name);
+  window.history.replaceState({}, '', url);
+}
+
+function populateGuestSwitcher(currentGuestFromURL){
+  const select = document.getElementById('guestSelect');
+  guests.forEach(name => {
+    const opt = document.createElement('option');
+    opt.value = name;
+    opt.textContent = name;
+    if (currentGuestFromURL && currentGuestFromURL === name) opt.selected = true;
+    select.appendChild(opt);
+  });
+}
+
+function initGuest(){
+  const params = new URLSearchParams(window.location.search);
+  const guestFromURL = params.get('guest');
+
+  if (guestFromURL) {
+    setGuestName(guestFromURL);
+  } else {
+    // No URL param provided — default to the first guest in the list (optional)
+    setGuestName("Esteemed Guest");
+  }
+  populateGuestSwitcher(guestFromURL);
+}
+
+initGuest();
+
+/* ---------------------------------------------------------
+   LIVE COUNTDOWN TIMER
+   --------------------------------------------------------- */
+function updateCountdown(){
+  const target = new Date(EVENT_CONFIG.countdownTarget).getTime();
+  const now = new Date().getTime();
+  const distance = target - now;
+
+  const els = {
+    days: document.getElementById('cd-days'),
+    hours: document.getElementById('cd-hours'),
+    minutes: document.getElementById('cd-minutes'),
+    seconds: document.getElementById('cd-seconds')
+  };
+
+  if (distance <= 0){
+    els.days.textContent = '00';
+    els.hours.textContent = '00';
+    els.minutes.textContent = '00';
+    els.seconds.textContent = '00';
+    document.getElementById('countdown').insertAdjacentHTML(
+      'afterend',
+      '<p style="margin-top:16px; color:var(--gold-soft); font-style:italic;">The celebration has begun! 🎉</p>'
+    );
+    clearInterval(countdownInterval);
+    return;
+  }
+
+  const pad = n => String(n).padStart(2, '0');
+  const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+  els.days.textContent = pad(days);
+  els.hours.textContent = pad(hours);
+  els.minutes.textContent = pad(minutes);
+  els.seconds.textContent = pad(seconds);
+}
+updateCountdown();
+const countdownInterval = setInterval(updateCountdown, 1000);
+
+/* ---------------------------------------------------------
+   AMBIENT FLOATING PARTICLES (decorative background motion)
+   --------------------------------------------------------- */
+function createParticles(){
+  const container = document.getElementById('particles');
+  const count = window.innerWidth < 600 ? 12 : 22;
+  for (let i = 0; i < count; i++){
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = Math.random() * 5 + 3;
+    p.style.width = `${size}px`;
+    p.style.height = `${size}px`;
+    p.style.left = `${Math.random() * 100}%`;
+    p.style.animationDuration = `${Math.random() * 10 + 12}s`;
+    p.style.animationDelay = `${Math.random() * 10}s`;
+    container.appendChild(p);
+  }
+}
+createParticles();
+
+/* ---------------------------------------------------------
+   SCROLL REVEAL for sections entering the viewport
+   --------------------------------------------------------- */
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting){
+      entry.target.style.animationPlayState = 'running';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.15 });
+
+document.querySelectorAll('.section .reveal, .section.reveal').forEach(el => {
+  observer.observe(el);
+});
+</script>
+
+</body>
+</html>
