@@ -491,7 +491,7 @@
     <h1 class="youre-invited">You're Invited</h1>
     <div class="divider"><span>✦</span></div>
     <div class="celebrant-name" id="celebrantName">Faith Wambui </div>
-    <div class="celebrating-age" id="celebratingAge">Celebrating 20+5 Years</div>
+    <div class="celebrating-age" id="celebratingAge">Celebrating 25 Years</div>
   </section>
 
   <!-- ============ PERSONALIZED GUEST GREETING ============ -->
@@ -503,9 +503,12 @@
 
     <!-- Guest switcher: convenience for previewing personalized invites -->
     <div class="guest-switcher">
-      <select id="guestSelect" onchange="switchGuest(this.value)">
+      <!-- <select id="guestSelect" onchange="switchGuest(this.value)">
         <option value="">— Preview a guest —</option>
-      </select>
+      </select> -->
+      <p class ="guest-message">
+        If you've received this invitation, please know that you hold a very special place in my heart. Your presence would mean so much to me, and I would be truly honored to celebrate this occasion with you.
+        </p>
     </div>
   </section>
 
@@ -639,13 +642,13 @@
 const EVENT_CONFIG = {
   celebrantName: "Faith Wambui",
   age: 25,
-  eventDate: "Saturday, 9th August 2026",
+  eventDate: "Sunday, 9th August 2026",
   eventTime: "7:00 PM",
   eventVenue: "Acacia,Ole Sereni",
   rsvpDeadline: "4th August 2026",
   rsvpEmail: "faithmuigai970@gmail.com",
   // ISO date used to power the live countdown timer (YYYY-MM-DDTHH:mm:ss)
-  countdownTarget: "2026-08-22T16:00:00"
+  countdownTarget: "2026-08-09T19:00:00"
 };
 
 /* ==========================================================
@@ -654,22 +657,22 @@ const EVENT_CONFIG = {
    own personalized invitation via a URL parameter, e.g.:
    yoursite.com/invite.html?guest=John%20Doe
    ========================================================== */
-const guests = [
-  "Peryshidia Nungari",
-  "Zaifa",
-  "Benedetta Wamuyu",
-  "Veronicah",
-  "Mirievon Nyambura",
-  "Monica",
-  "Molly",
-  "Mary",
-  "Patricia",
-  "Cheboi",
-  "Swaleh",
-  "Ken",
-  "Stevo",
-  "FaithJoan"
-];
+// const guests = [
+//   "Peryshidia Nungari",
+//   "Zaifa",
+//   "Benedetta Wamuyu",
+//   "Veronicah",
+//   "Mirievon Nyambura",
+//   "Monica",
+//   "Molly",
+//   "Mary",
+//   "Patricia",
+//   "Cheboi",
+//   "Swaleh",
+//   "Ken",
+//   "Stevo",
+//   "FaithJoan"
+// ];
 
 /* ---------------------------------------------------------
    Populate static event/celebrant details from config
@@ -688,8 +691,7 @@ document.title = `You're Invited — ${EVENT_CONFIG.celebrantName}'s Birthday`;
 /* ---------------------------------------------------------
    GUEST PERSONALIZATION
    Reads ?guest=Name from the URL. Falls back to a generic
-   greeting if no match is found, and populates the guest
-   switcher dropdown for easy manual previewing.
+   greeting if no match is found.
    --------------------------------------------------------- */
 function setGuestName(name){
   const el = document.getElementById('guestName');
@@ -705,17 +707,6 @@ function switchGuest(name){
   window.history.replaceState({}, '', url);
 }
 
-function populateGuestSwitcher(currentGuestFromURL){
-  const select = document.getElementById('guestSelect');
-  guests.forEach(name => {
-    const opt = document.createElement('option');
-    opt.value = name;
-    opt.textContent = name;
-    if (currentGuestFromURL && currentGuestFromURL === name) opt.selected = true;
-    select.appendChild(opt);
-  });
-}
-
 function initGuest(){
   const params = new URLSearchParams(window.location.search);
   const guestFromURL = params.get('guest');
@@ -723,10 +714,9 @@ function initGuest(){
   if (guestFromURL) {
     setGuestName(guestFromURL);
   } else {
-    // No URL param provided — default to the first guest in the list (optional)
+    // No URL param provided — default greeting
     setGuestName("Esteemed Guest");
   }
-  populateGuestSwitcher(guestFromURL);
 }
 
 initGuest();
